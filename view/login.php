@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logga in</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <div class="login-container">
         <h2 class="logga-in">Logga in</h2>
-        <form action="login_handler.php" method="POST"> <!--login_handler är exempel på filen. Den finns inte.--> 
+        <form action="../controller/loginController.php" method="POST"> <!-- loginController.php tar POST requesten --> 
             <div class="form-group">
                 <label for="username">Användarnamn</label>
                 <input class="loginbox" type="text" id="username" name="username" placeholder="Ange ditt användarnamn" required>
