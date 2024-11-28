@@ -1,0 +1,24 @@
+div.login-container {
+    display: flex;
+    flex-direction: column;
+    font-family: sans-serif;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+div.form-group{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+button.login-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+input.loginbox{
+    margin-left: 5px;
+}

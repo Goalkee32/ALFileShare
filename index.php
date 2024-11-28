@@ -1,3 +1,3 @@
 <?php
-include 'upload.php';
+include 'login.php';
 ?>
