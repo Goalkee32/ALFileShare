@@ -10,115 +10,94 @@
 </head>
 <body>
 <section class="w3-container w3-center" style="max-width:600px">
-            <h2 class="w3-wide">AL File Share</h2>
-            <p class="w3-opacity"><i>I hate google</i></p>
-          </section> 
-          <main>
-            <nav class="w3-bar w3-black">
-                <a href="../upload.php"  class="w3-button w3-bar-item">Ladda upp</a>
-                <?php
-                // Ange sökvägen där mapparna finns
-                $dir = 'media';
+    <h2 class="w3-wide">AL File Share</h2>
+    <p class="w3-opacity"><i>I hate google</i></p>
+</section>
 
-                // Kontrollera om katalogen finns och är läsbar
-                if (is_dir($dir) && $handle = opendir($dir)) {
-                 while (($folder = readdir($handle)) !== false) {
-                        // Uteslut "." och ".." samt visa endast mappar
-                        if ($folder != '.' && $folder != '..' && is_dir($dir . '/' . $folder)) {
-                            echo '<a href="' . $dir . '/' . $folder . '" class="w3-button w3-bar-item">' . htmlspecialchars($folder) . '</a>';
-                        }
-                    }
-                    closedir($handle);
+<main>
+    <nav class="w3-bar w3-black">
+        <a href="../upload.php" class="w3-button w3-bar-item">Ladda upp</a>
+        <?php
+        $dir = 'media';
+
+        if (is_dir($dir) && $handle = opendir($dir)) {
+            while (($folder = readdir($handle)) !== false) {
+                if ($folder != '.' && $folder != '..' && is_dir($dir . '/' . $folder)) {
+                    echo '<a href="?dir=' . urlencode($folder) . '" class="w3-button w3-bar-item">' . htmlspecialchars($folder) . '</a>';
                 }
-                ?>
-            </nav>
-            <nav>
-            <h2>Filuppladdning och Mapphantering</h2>
+            }
+            closedir($handle);
+        }
+        ?>
+    </nav>
 
-<?php
-// Standardmapp om ingen kategori är vald
-$baseDir = 'media/';
-$currentDir = $baseDir;
+    <nav>
+        <h2>Filuppladdning och Mapphantering</h2>
 
-// Kontrollera om användaren navigerar i en specifik mapp
-if (isset($_GET['dir'])) {
-    // Hantera relativ sökväg för navigering
-    $currentDir = realpath($baseDir . $_GET['dir']);
-    
-    // Säkerställ att vi inte tillåter navigering utanför basmappen
-    if (strpos($currentDir, realpath($baseDir)) !== 0) {
+        <?php
+        $baseDir = 'media/';
         $currentDir = $baseDir;
-    }
-}
 
-echo "<h3>Nuvarande mapp: " . htmlspecialchars(str_replace($baseDir, '', $currentDir)) . "</h3>";
-?>
+        if (isset($_GET['dir'])) {
+            $currentDir = realpath($baseDir . '/' . $_GET['dir']);
+            if (strpos($currentDir, realpath($baseDir)) !== 0) {
+                $currentDir = $baseDir;
+            }
+        }
 
-<!-- Formulär för att skapa ny mapp -->
-<form action="upload.php" method="post">
-    <input type="text" name="newFolderName" placeholder="Ange nytt mappnamn" required>
-    <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
-    <input type="submit" name="createFolder" value="Skapa mapp">
-</form>
+        echo "<h3>Nuvarande mapp: " . htmlspecialchars(str_replace(realpath($baseDir), '', $currentDir)) . "</h3>";
+        ?>
 
-<!-- Formulär för att ladda upp filer -->
-<form action="upload.php" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile" required>
-    <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
-    <input type="submit" value="Ladda upp fil">
-</form>
+        <form action="upload.php" method="post">
+            <input type="text" name="newFolderName" placeholder="Ange nytt mappnamn" required>
+            <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
+            <input type="submit" name="createFolder" value="Skapa mapp">
+        </form>
 
-<?php
-// Hantera mappskapande
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['createFolder'])) {
-    $newFolderName = $_POST['newFolderName'];
-    $newFolderPath = $_POST['currentDir'] . '/' . $newFolderName;
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploadedFile" required>
+            <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
+            <input type="submit" value="Ladda upp fil">
+        </form>
 
-    // Skapa mappen om den inte finns
-    if (!is_dir($newFolderPath)) {
-        mkdir($newFolderPath, 0777, true);
-        echo "<p>Mappen <strong>" . htmlspecialchars($newFolderName) . "</strong> skapades.</p>";
-    } else {
-        echo "<p>Mappen finns redan.</p>";
-    }
-}
+        <?php
+        $items = scandir($currentDir);
+        echo "<ul>";
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') continue;
 
-// Hantera filuppladdning
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploadedFile'])) {
-    $uploadFile = $_POST['currentDir'] . '/' . basename($_FILES['uploadedFile']['name']);
+            $itemPath = $currentDir . '/' . $item;
+            $relativePath = str_replace(realpath($baseDir), '', realpath($itemPath));
 
-    // Flytta filen till den angivna mappen
-    if (move_uploaded_file($_FILES['uploadedFile']['tmp_name'], $uploadFile)) {
-        echo "<p>Filen laddades upp som: " . htmlspecialchars(basename($_FILES['uploadedFile']['name'])) . "</p>";
-    } else {
-        echo "<p>Ett fel uppstod vid uppladdning av filen.</p>";
-    }
-}
+            if (is_dir($itemPath)) {
+                echo "<li><a href='?dir=" . urlencode($relativePath) . "'>[Mapp] " . htmlspecialchars($item) . "</a></li>";
+            } else {
+                echo "<li>" . htmlspecialchars($item) . "</li>";
+            }
+        }
+        echo "</ul>";
 
-// Visa mappar och filer i den aktuella mappen
-$items = scandir($currentDir);
-echo "<ul>";
-foreach ($items as $item) {
-    if ($item === '.' || $item === '..') {
-        continue;
-    }
+        // Visa bilder
+        $imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $images = array_filter($items, function($item) use ($imageExtensions, $currentDir) {
+            $ext = pathinfo($item, PATHINFO_EXTENSION);
+            return in_array(strtolower($ext), $imageExtensions) && is_file($currentDir . '/' . $item);
+        });
 
-    $itemPath = $currentDir . '/' . $item;
-    if (is_dir($itemPath)) {
-        // Lägg till länk till mappen om det är en mapp
-        $relativePath = str_replace($baseDir, '', $itemPath);
-        echo "<li><a href='?dir=" . urlencode($relativePath) . "'>[Mapp] " . htmlspecialchars($item) . "</a></li>";
-    } else {
-        // Visa filnamn om det är en fil
-        echo "<li>" . htmlspecialchars($item) . "</li>";
-    }
-}
-echo "</ul>";
-?>
-            </nav>
-
-        </main>
-    
-        
+        if (!empty($images)) {
+            echo '<div class="w3-row-padding">';
+            foreach ($images as $image) {
+                $imagePath = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', realpath($currentDir . '/' . $image));
+                echo '<div class="w3-col s4">';
+                echo '<img src="' . $imagePath . '" alt="' . htmlspecialchars($image) . '" style="width:100%" class="w3-hover-opacity">';
+                echo '</div>';
+            }
+            echo '</div>';
+        } else {
+            echo "<p>Inga bilder hittades i denna mapp.</p>";
+        }
+        ?>
+    </nav>
+</main>
 </body>
 </html>
