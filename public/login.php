@@ -10,7 +10,7 @@
 <body>
     <div class="login-container">
         <h2 class="logga-in">Logga in</h2>
-        <form id="loginForm">
+        <form action="../controller/loginController.php" method="post">
             <div class="form-group">
                 <label for="username">Användarnamn</label>
                 <input class="loginbox" type="text" id="username" name="username" placeholder="Ange ditt användarnamn" required>
@@ -23,5 +23,4 @@
         </form>
     </div>
 </body>
-<script src="../assets/js/fetch.js"></script>
 </html>
