@@ -11,7 +11,7 @@
 <body>
 <section class="w3-container w3-center" style="max-width:600px">
     <h2 class="w3-wide">AL File Share</h2>
-    <p class="w3-opacity"><i>I hate google</i></p>
+    <p class="w3-opacity"><i>Jag älskar google ;></i></p>
 </section>
 
 <main>
