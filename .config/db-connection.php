@@ -2,7 +2,7 @@
 // Serv initals
 $dsn = "mysql:dbname=alfileshare;host=127.0.0.1";
 $username = "root";
-$password = "NhEtzNQ{48L3E0M"; // DO NOT PASTE PSW AND THEN GIT PUSH
+$password = "NhEtzNQ{48L3E0M"; // CHANGE THIS
 
 function dbConnection($dsn, $username, $password) {
     $ret = "";
