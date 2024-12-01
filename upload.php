@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,53 +19,102 @@
         <a href="../public/logged-in.php" class="w3-button w3-bar-item">Till dina mappar</a>
     </nav>
 
-    <nav>
+    <section class="w3-container">
         <h2>Filuppladdning och Mapphantering</h2>
 
         <?php
         $baseDir = 'media';
+        if (!is_dir($baseDir)) {
+            mkdir($baseDir, 0777, true); // Skapa huvudmappen om den inte finns
+        }
+
         $currentDir = realpath($baseDir);
+
         if (isset($_GET['dir'])) {
-            $requestedDir = realpath($baseDir . '/' . basename($_GET['dir']));
+            $requestedDir = realpath($baseDir . '/' . $_GET['dir']);
             if ($requestedDir && strpos($requestedDir, realpath($baseDir)) === 0) {
                 $currentDir = $requestedDir;
             }
         }
+
         echo "<h3>Nuvarande mapp: " . htmlspecialchars(str_replace(realpath($baseDir), '', $currentDir)) . "</h3>";
+
+        // Hantera skapande av mapp
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['createFolder'])) {
+            $newFolderName = trim($_POST['newFolderName']);
+            $newFolderPath = $currentDir . '/' . basename($newFolderName);
+
+            if (!is_dir($newFolderPath)) {
+                if (mkdir($newFolderPath, 0777, true)) {
+                    echo "<p>Mappen '$newFolderName' skapades framgångsrikt.</p>";
+                } else {
+                    echo "<p>Kunde inte skapa mappen '$newFolderName'.</p>";
+                }
+            } else {
+                echo "<p>Mappen '$newFolderName' finns redan.</p>";
+            }
+        }
+
+        // Hantera filuppladdning
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploadedFile'])) {
+            $uploadFile = $_FILES['uploadedFile'];
+            $targetFilePath = $currentDir . '/' . basename($uploadFile['name']);
+            $uploadOk = 1;
+
+            $allowedTypes = ['jpg', 'png', 'gif', 'pdf', 'txt', 'docx']; // Tillåtna filtyper
+            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+
+            if (!in_array($fileType, $allowedTypes)) {
+                echo "<p>Endast JPG, PNG, GIF, PDF, TXT och DOCX-filer är tillåtna.</p>";
+                $uploadOk = 0;
+            }
+
+            if (file_exists($targetFilePath)) {
+                echo "<p>Filen finns redan.</p>";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk == 1) {
+                if (move_uploaded_file($uploadFile['tmp_name'], $targetFilePath)) {
+                    echo "<p>Filen " . htmlspecialchars($uploadFile['name']) . " har laddats upp.</p>";
+                } else {
+                    echo "<p>Ett fel uppstod vid uppladdningen.</p>";
+                }
+            }
+        }
         ?>
 
-        <!-- Skapa ny mapp -->
-        <form action="upload.php" method="post">
+        <!-- Formulär för att skapa mapp -->
+        <form action="" method="post">
             <input type="text" name="newFolderName" placeholder="Ange nytt mappnamn" required>
-            <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
             <input type="submit" name="createFolder" value="Skapa mapp">
         </form>
 
-        <!-- Ladda upp fil -->
-        <form action="upload.php" method="post" enctype="multipart/form-data">
+        <!-- Formulär för att ladda upp fil -->
+        <form action="" method="post" enctype="multipart/form-data">
             <input type="file" name="uploadedFile" required>
-            <input type="hidden" name="currentDir" value="<?php echo htmlspecialchars($currentDir); ?>">
             <input type="submit" value="Ladda upp fil">
         </form>
 
         <!-- Lista filer och mappar -->
-        <?php
-        $items = scandir($currentDir);
-        echo "<ul>";
-        foreach ($items as $item) {
-            if ($item === '.' || $item === '..') continue;
-            $itemPath = $currentDir . '/' . $item;
-            $relativePath = str_replace(realpath($baseDir), '', $itemPath);
+        <h3>Innehåll:</h3>
+        <ul>
+            <?php
+            $items = scandir($currentDir);
+            foreach ($items as $item) {
+                if ($item === '.' || $item === '..') continue;
+                $itemPath = $currentDir . '/' . $item;
+                $relativePath = str_replace(realpath($baseDir), '', $itemPath);
 
-            if (is_dir($itemPath)) {
-                echo "<li><a href='?dir=" . urlencode(basename($relativePath)) . "'>[Mapp] " . htmlspecialchars($item) . "</a></li>";
-            } else {
-                echo "<li>" . htmlspecialchars($item) . "</li>";
+                if (is_dir($itemPath)) {
+                    echo "<li><a href='?dir=" . urlencode(str_replace(realpath($baseDir) . '/', '', $itemPath)) . "'>[Mapp] " . htmlspecialchars($item) . "</a></li>";
+                } else {
+                    echo "<li>" . htmlspecialchars($item) . "</li>";
+                }
             }
-        }
-        echo "</ul>";
-        ?>
-    </nav>
+            ?>
+        </ul>
+    </section>
 </main>
 </body>
 </html>
