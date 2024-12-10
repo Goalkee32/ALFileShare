@@ -8,12 +8,10 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-
 <section class="w3-container w3-center" style="max-width:600px">
     <h2 class="w3-wide">AL File Share</h2>
     <p class="w3-opacity"><i>Jag älskar google ;></i></p>
 </section>
-
 <main>
     <nav class="w3-bar w3-black">
         <a href="../upload.php" class="w3-button w3-bar-item">Ladda upp</a>
@@ -33,7 +31,6 @@
         }
         ?>
     </nav>
-
     <section class="w3-container">
         <?php
         if (isset($_GET['folder'])) {
@@ -61,8 +58,6 @@
         }
         ?>
     </section>
-
 </main>
-
 </body>
 </html>

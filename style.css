@@ -19,6 +19,11 @@ button.login-btn{
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.form-group a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 input.loginbox{
     margin-left: 5px;
 }
