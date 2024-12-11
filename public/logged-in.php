@@ -1,3 +1,9 @@
+<?php 
+$_GET["class"] = "AuthController";
+$_GET["method"] = "isLoggedIn";
+
+require dirname(__DIR__) . "../controller/router-controller.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +20,7 @@
 </section>
 <main>
     <nav class="w3-bar w3-black">
+        <a href="../include/logout.php">Logga ut</a>
         <a href="../upload.php" class="w3-button w3-bar-item">Ladda upp</a>
         <?php
         // Ange sökvägen där mapparna finns

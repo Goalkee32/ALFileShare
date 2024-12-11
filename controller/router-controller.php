@@ -1,18 +1,18 @@
 <?php
 require "../controller/auth-controller.php";
 
-// Allowed
+// Tillåtna
 $validClasses = ["AuthController"];
-$validMethods = ["login", "registration"];
+$validMethods = ["login", "registration", "isLoggedIn", "logout"];
 
-// Get class, method parameters
+// Tar class och method parametrarna
 $class = $_GET["class"] ?? "";
 $method = $_GET["method"] ?? "";
 
-// If class and method exist
+// Om class och method finns
 if (class_exists($class) && method_exists($class, $method)) {
-    $controller = new $class(); // Instantiate the class
-    $controller->$method(); // Call the method
+    $controller = new $class(); // Instantiera klassen
+    $controller->$method(); // Kalla på methoden
 } else {
     echo "Error: Class or method not found!";
 }

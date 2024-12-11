@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 $success = $_SESSION["success"] ?? "";
 $error = $_SESSION["error"] ?? "";
 unset($_SESSION["error"], $_SESSION["success"]);
@@ -26,7 +27,11 @@ unset($_SESSION["error"], $_SESSION["success"]);
                 <input class="loginbox" type="password" id="password" name="password" placeholder="Ange ditt lösenord" required>
             </div>
             <div class="form-group">
-                <a href="/public/registration.php">Registerar dig idag!</a>
+                <label for="checkbox">Kom ihåg ditt lösenord?</label>
+                <input type="checkbox" id="remember_me" name="remember_me" value="on">
+            </div>
+            <div class="form-group">
+                <a href="/public/registration.php">Registrera dig idag!</a>
                 <button type="submit" class="login-btn">Logga in</button>
             </div>
         </form>
