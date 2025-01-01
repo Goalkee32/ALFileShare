@@ -1,9 +1,10 @@
 <?php
 require "../controller/auth-controller.php";
+require "../controller/file-controller.php";
 
 // Tillåtna
-$validClasses = ["AuthController"];
-$validMethods = ["login", "registration", "isLoggedIn", "logout"];
+$validClasses = ["AuthController", "FileController"];
+$validMethods = ["login", "registration", "isLoggedIn", "logout", "uploadFile"];
 
 // Tar class och method parametrarna
 $class = $_GET["class"] ?? "";

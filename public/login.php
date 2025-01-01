@@ -35,7 +35,7 @@ unset($_SESSION["error"], $_SESSION["success"]);
                 <button type="submit" class="login-btn">Logga in</button>
             </div>
         </form>
-        <?php include dirname(__DIR__) . "../view/login-error-view.php"; ?>
+        <?php include dirname(__DIR__) . "../view/error-view.php"; ?>
     </div>
 </body>
 </html>

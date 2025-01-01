@@ -1,7 +1,7 @@
 <?php
 session_start();
-require dirname(__DIR__) . "../.config/db-config.php";
-require dirname(__DIR__) . "../model/user-model.php";
+require_once dirname(__DIR__) . "../.config/db-config.php";
+require_once dirname(__DIR__) . "../model/user-model.php";
 
 class AuthController {
     private $userModel;
@@ -27,7 +27,7 @@ class AuthController {
             if ($user) {
                 // Användaren autoriserad
                 $_SESSION["user_id"] = $user["user_id"];
-                $_SESSION["username"] = $user["username_account"];
+                $_SESSION["username"] = $user["username"];
 
                 if (isset($_POST["remember_me"]) && $_POST["remember_me"] == "on") {
                     // Generera/spara token
@@ -92,7 +92,7 @@ class AuthController {
             if ($user) {
                 // Token är korrekt, återinitiera information
                 $_SESSION["user_id"] = $user["user_id"];
-                $_SESSION["username"] = $user["username_accounts"];
+                $_SESSION["username"] = $user["username"];
             } else {
                 // Oklar token, rensar kakor
                 setcookie("remember_me", "", time() - 3600, "/");

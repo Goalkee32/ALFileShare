@@ -20,8 +20,13 @@ require dirname(__DIR__) . "../controller/router-controller.php";
 </section>
 <main>
     <nav class="w3-bar w3-black">
-        <a href="../include/logout.php">Logga ut</a>
-        <a href="../upload.php" class="w3-button w3-bar-item">Ladda upp</a>
+        <a class="w3-button w3-bar-item" href="../include/logout.php">Logga ut</a>
+        <a class="w3-button w3-bar-item" href="../public/file-loading.php">Ladda upp</a>
+
+
+
+
+
         <?php
         // Ange sökvägen där mapparna finns
         $dir = '../media';

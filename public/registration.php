@@ -32,7 +32,7 @@ unset($_SESSION["error"]);
                 <button type="submit" class="login-btn">Registrera dig</button>
             </div>
         </form>
-        <?php include dirname(__DIR__) . "../view/login-error-view.php"; ?>
+        <?php include dirname(__DIR__) . "../view/error-view.php"; ?>
     </div>
 </body>
 </html>
