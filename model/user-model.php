@@ -37,7 +37,6 @@ class UserModel {
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['token' => $token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
         return $user;
     }
 

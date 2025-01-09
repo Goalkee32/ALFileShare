@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once dirname(__DIR__) . "../.config/db-config.php";
 require_once dirname(__DIR__) . "../model/user-model.php";
 
@@ -14,7 +15,7 @@ class AuthController {
 
     // Tar hand om login förfrågan
     public function login() {
-        $error = "";  // Sparar error meddelande
+        //$error = "";  // Sparar error meddelande
 
         // Kollar om form var skickad
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -51,7 +52,7 @@ class AuthController {
 
     // Registrering funktion
     public function registration() {
-        $error = "";  // Sparar error meddelande
+        //$error = "";  // Sparar error meddelande
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $username = $_POST["username"] ?? "";

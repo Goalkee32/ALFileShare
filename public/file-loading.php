@@ -1,12 +1,12 @@
 <?php 
-$success = $_SESSION["success"] ?? "";
-$error = $_SESSION["error"] ?? "";
-unset($_SESSION["error"], $_SESSION["success"]);
-
 $_GET["class"] = "AuthController";
 $_GET["method"] = "isLoggedIn";
 
 require dirname(__DIR__) . "../controller/router-controller.php";
+
+$success = $_SESSION["success"] ?? "";
+$error = $_SESSION["error"] ?? "";
+unset($_SESSION["error"], $_SESSION["success"]);
 ?>
 <!DOCTYPE html>
 <html lang="sv">
@@ -23,12 +23,10 @@ require dirname(__DIR__) . "../controller/router-controller.php";
     <h2 class="w3-wide">AL File Share</h2>
     <p class="w3-opacity"><i>Jag älskar google ;></i></p>
 </section>
-
 <main>
     <nav class="w3-bar w3-black">
         <a href="../public/logged-in.php" class="w3-button w3-bar-item">Till dina mappar</a>
     </nav>
-
     <section class="w3-container">
         <h2>Filuppladdning och Mapphantering</h2>
         <?php include dirname(__DIR__) . "../view/success-view.php"; ?>
@@ -47,11 +45,7 @@ require dirname(__DIR__) . "../controller/router-controller.php";
 
         <!-- Lista filer och mappar -->
         <h3>Innehåll:</h3>
-        <ul>
-
-
-        
-        </ul>
+        <?php include dirname(__DIR__) . "../view/file-list-view.php"; ?>
     </section>
 </main>
 </body>
