@@ -44,7 +44,6 @@ unset($_SESSION["error"], $_SESSION["success"]);
         </form>
 
         <!-- Lista filer och mappar -->
-        <h3>Innehåll:</h3>
         <?php include dirname(__DIR__) . "../view/file-list-view.php"; ?>
     </section>
 </main>

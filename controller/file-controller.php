@@ -19,12 +19,14 @@ class FileController {
     // Viktiga variabler
     public function settings() {
         $this->userId = $_SESSION['user_id'];
-        $this->uploadDir = 'C:\Users\victo\OneDrive\Pictures\alfileshare' . '\\' . $this->userId;
+        $this->uploadDir = 'C:\Users\victo\OneDrive\Pictures\alfileshare' . DIRECTORY_SEPARATOR . $this->userId;
+    }
+    public function getUploadDir() {
+        return $this->uploadDir;
     }
 
     // Huvudmaps function
     public function directoryCheck($uploadDir) {
-        $this->settings();
         // Skapar en huvudmap om en inte finns
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
@@ -38,7 +40,7 @@ class FileController {
         // Hantera den uppladdade filen
         if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
             $fileName = basename($_FILES['file']['name']);
-            $filePath = $uploadDir . '\\' . $fileName;
+            $filePath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 
             // Flyttar filen till den designerade mappen
             if (move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
@@ -59,24 +61,34 @@ class FileController {
     }
 
     // Ladda filerna för att visa
-    public function loadFileList() {
-        // Sanitiera fil länken för att undvika fil länks intrång
-        $currentDir = realpath($this->uploadDir);
-        $this->directoryCheck($currentDir);
-
-        // Håller koll på att användaren håller sig inom sin fil länk
-        if (strpos($currentDir, $this->uploadDir) !== 0) {
-            die("Access denied.");
+    public function loadFileList($subDir = '') {
+        $targetDir = $this->uploadDir;
+    
+        if (!empty($subDir)) {
+            // Bifoga underkatalogen till baskatalogen
+            $targetDir .= DIRECTORY_SEPARATOR . $subDir;
+        } else {
+            // Lägg till ?dir=. när ingen underkatalog finns
+            $subDir = ".";
         }
-
-        // Läser länkens innehåll
+    
+        // Validera och sanera målkatalogen
+        $currentDir = $this->sanitizeAndValidatePath($targetDir);
+        $this->directoryCheck($currentDir);
+    
+        // Ta bort avskiljare för att visa konsistens
+        $cleanSubDir = rtrim($subDir, DIRECTORY_SEPARATOR);
+    
+        // Läs och returnera katalogens innehåll
         $contents = scandir($currentDir);
-
-        // Filter out `.` and `..`
         $filteredContents = array_filter($contents, function ($item) {
             return $item !== "." && $item !== "..";
         });
-        return $filteredContents;
+    
+        return [
+            'contents' => $filteredContents,
+            'currentDir' => $cleanSubDir,
+        ];
     }
 
 
@@ -102,5 +114,16 @@ class FileController {
     
         // Skickar ut 36 karaktärer UUID
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+    }
+    
+    public function sanitizeAndValidatePath($path) {
+        // Verklig sökväg till katalogen
+        $realPath = realpath($path);
+    
+        // Kontrollera om sökvägen finns och finns i användarens katalog
+        if ($realPath === false || strpos($realPath, realpath($this->uploadDir)) !== 0) {
+            $this->dieStatement("Access denied.");
+        }
+        return $realPath;
     }
 }
