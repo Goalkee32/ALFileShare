@@ -91,8 +91,46 @@ class FileController {
         ];
     }
 
+    // Sorterar listan
+    public function getSortedFileList($subDir = '') {
+        $fileData = $this->loadFileList($subDir);
+    
+        $directories = [];
+        $files = [];
+    
+        foreach ($fileData['contents'] as $item) {
+            $itemPath = $fileData['currentDir'] === ""
+                ? $item
+                : $fileData['currentDir'] . DIRECTORY_SEPARATOR . $item;
+    
+            $isDir = is_dir(realpath($this->getUploadDir() . DIRECTORY_SEPARATOR . $itemPath));
+    
+            if ($isDir) {
+                $directories[] = $item;
+            } else {
+                $files[] = $item;
+            }
+        }
+    
+        // Sorterar båda arrayer i alfabetisk ordning
+        sort($directories, SORT_NATURAL | SORT_FLAG_CASE);
+        sort($files, SORT_NATURAL | SORT_FLAG_CASE);
+    
+        return [
+            'directories' => $directories,
+            'files' => $files,
+            'currentDir' => $fileData['currentDir'],
+        ];
+    }
 
 
+
+
+
+
+
+
+    
 
     // Dödar och skickar error meddelande
     public function dieStatement($tlp) {
@@ -116,8 +154,8 @@ class FileController {
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
     
+    // Validerar sök vägen
     public function sanitizeAndValidatePath($path) {
-        // Verklig sökväg till katalogen
         $realPath = realpath($path);
     
         // Kontrollera om sökvägen finns och finns i användarens katalog
