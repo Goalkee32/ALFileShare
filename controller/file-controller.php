@@ -19,7 +19,7 @@ class FileController {
     // Viktiga variabler
     public function settings() {
         $this->userId = $_SESSION["user_id"];
-        $this->uploadDir = "C:\\Users\\victo\\OneDrive\\Pictures\\alfileshare" . DIRECTORY_SEPARATOR . $this->userId;
+        $this->uploadDir = "/home/r1nz3n/ALFileShareStorage/" . $this->userId;
         // DEBUG: "C:\\Users\\victo\\OneDrive\\Pictures\\alfileshare" . DIRECTORY_SEPARATOR . $this->userId;
         // PRODUCTION: "/home/r1nz3n/ALFileShareStorage/" . $this->userId;
     }
@@ -36,20 +36,20 @@ class FileController {
     }
 
     // Uppladdnings funktion
-    public function uploadFile($userId, $uploadDir) {
-        $this->directoryCheck($uploadDir);
+    public function uploadFile() {
+        $this->directoryCheck($this->uploadDir);
                 
         // Hantera den uppladdade filen
         if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
             $fileName = basename($_FILES["file"]["name"]);
-            $filePath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+            $filePath = $this->uploadDir . DIRECTORY_SEPARATOR . $fileName;
 
             // Flyttar filen till den designerade mappen
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $filePath)) {
 
                 // Sparar filvägen i databasen
                 $uuid = $this->uuid();
-                $file = $this->fileModel->uploadImage($uuid, $userId, $filePath);
+                $file = $this->fileModel->uploadImage($uuid, $this->userId, $filePath);
 
                 // Om filen sparades : Success
                 if ($file) {
