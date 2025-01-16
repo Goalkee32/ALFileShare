@@ -29,8 +29,8 @@ unset($_SESSION["error"], $_SESSION["success"]);
     </nav>
     <section class="w3-container">
         <h2>Filuppladdning och Mapphantering</h2>
-        <?php include dirname(__DIR__) . "../view/success-view.php"; ?>
-        <?php include dirname(__DIR__) . "../view/error-view.php"; ?>
+        <?php include dirname(__DIR__) . "/view/success-view.php"; ?>
+        <?php include dirname(__DIR__) . "/view/error-view.php"; ?>
         <!-- Formulär för att skapa mapp -->
         <form action="" method="post">
             <input type="text" name="newFolderName" placeholder="Ange nytt mappnamn" required>
@@ -44,7 +44,7 @@ unset($_SESSION["error"], $_SESSION["success"]);
         </form>
 
         <!-- Lista filer och mappar -->
-        <?php include dirname(__DIR__) . "../view/file-list-view.php"; ?>
+        <?php include dirname(__DIR__) . "/view/file-list-view.php"; ?>
     </section>
 </main>
 </body>
