@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once dirname(__DIR__) . "../.config/db-config.php";
-require_once dirname(__DIR__) . "../model/user-model.php";
+require_once dirname(__DIR__) . "/.config/db-config.php";
+require_once dirname(__DIR__) . "/model/user-model.php";
 
 class AuthController {
     private $userModel;

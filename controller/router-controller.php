@@ -1,6 +1,6 @@
 <?php
-require_once "../controller/auth-controller.php";
-require_once "../controller/file-controller.php";
+require_once dirname(__DIR__) . "/controller/auth-controller.php";
+require_once dirname(__DIR__) . "../controller/file-controller.php";
 
 // Tillåtna
 $validClasses = ["AuthController", "FileController"];

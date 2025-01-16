@@ -1,7 +1,7 @@
 <?php
 
-require_once dirname(__DIR__) . "../.config/db-config.php";
-require_once dirname(__DIR__) . "../model/file-model.php";
+require_once dirname(__DIR__) . "/.config/db-config.php";
+require_once dirname(__DIR__) . "/model/file-model.php";
 
 class FileController {
     private $fileModel;
@@ -18,8 +18,10 @@ class FileController {
 
     // Viktiga variabler
     public function settings() {
-        $this->userId = $_SESSION['user_id'];
-        $this->uploadDir = 'C:\Users\victo\OneDrive\Pictures\alfileshare' . DIRECTORY_SEPARATOR . $this->userId;
+        $this->userId = $_SESSION["user_id"];
+        $this->uploadDir = "C:\\Users\\victo\\OneDrive\\Pictures\\alfileshare" . DIRECTORY_SEPARATOR . $this->userId;
+        // DEBUG: "C:\\Users\\victo\\OneDrive\\Pictures\\alfileshare" . DIRECTORY_SEPARATOR . $this->userId;
+        // PRODUCTION: "/home/r1nz3n/ALFileShareStorage/" . $this->userId;
     }
     public function getUploadDir() {
         return $this->uploadDir;
@@ -38,12 +40,12 @@ class FileController {
         $this->directoryCheck($uploadDir);
                 
         // Hantera den uppladdade filen
-        if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-            $fileName = basename($_FILES['file']['name']);
+        if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
+            $fileName = basename($_FILES["file"]["name"]);
             $filePath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
 
             // Flyttar filen till den designerade mappen
-            if (move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $filePath)) {
 
                 // Sparar filvägen i databasen
                 $uuid = $this->uuid();
@@ -61,7 +63,7 @@ class FileController {
     }
 
     // Ladda filerna för att visa
-    public function loadFileList($subDir = '') {
+    public function loadFileList($subDir = "") {
         $targetDir = $this->uploadDir;
     
         if (!empty($subDir)) {
@@ -86,22 +88,22 @@ class FileController {
         });
     
         return [
-            'contents' => $filteredContents,
-            'currentDir' => $cleanSubDir,
+            "contents" => $filteredContents,
+            "currentDir" => $cleanSubDir,
         ];
     }
 
     // Sorterar listan
-    public function getSortedFileList($subDir = '') {
+    public function getSortedFileList($subDir = "") {
         $fileData = $this->loadFileList($subDir);
     
         $directories = [];
         $files = [];
     
-        foreach ($fileData['contents'] as $item) {
-            $itemPath = $fileData['currentDir'] === ""
+        foreach ($fileData["contents"] as $item) {
+            $itemPath = $fileData["currentDir"] === ""
                 ? $item
-                : $fileData['currentDir'] . DIRECTORY_SEPARATOR . $item;
+                : $fileData["currentDir"] . DIRECTORY_SEPARATOR . $item;
     
             $isDir = is_dir(realpath($this->getUploadDir() . DIRECTORY_SEPARATOR . $itemPath));
     
@@ -117,9 +119,9 @@ class FileController {
         sort($files, SORT_NATURAL | SORT_FLAG_CASE);
     
         return [
-            'directories' => $directories,
-            'files' => $files,
-            'currentDir' => $fileData['currentDir'],
+            "directories" => $directories,
+            "files" => $files,
+            "currentDir" => $fileData["currentDir"],
         ];
     }
 
@@ -151,7 +153,7 @@ class FileController {
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
     
         // Skickar ut 36 karaktärer UUID
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        return vsprintf("%s%s-%s-%s-%s-%s%s%s", str_split(bin2hex($data), 4));
     }
     
     // Validerar sök vägen

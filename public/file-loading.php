@@ -2,7 +2,7 @@
 $_GET["class"] = "AuthController";
 $_GET["method"] = "isLoggedIn";
 
-require dirname(__DIR__) . "../controller/router-controller.php";
+require dirname(__DIR__) . "/controller/router-controller.php";
 
 $success = $_SESSION["success"] ?? "";
 $error = $_SESSION["error"] ?? "";

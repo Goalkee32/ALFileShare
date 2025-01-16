@@ -16,7 +16,7 @@ unset($_SESSION["error"], $_SESSION["success"]);
 <body>
     <div class="login-container">
         <h2 class="logga-in">Logga in</h2>
-        <?php include dirname(__DIR__) . "../view/success-view.php"; ?>
+        <?php include dirname(__DIR__) . "/view/success-view.php"; ?>
         <form action="../controller/router-controller.php?class=AuthController&method=login" method="POST">
             <div class="form-group">
                 <label for="username">Användarnamn</label>
@@ -35,7 +35,7 @@ unset($_SESSION["error"], $_SESSION["success"]);
                 <button type="submit" class="login-btn">Logga in</button>
             </div>
         </form>
-        <?php include dirname(__DIR__) . "../view/error-view.php"; ?>
+        <?php include dirname(__DIR__) . "/view/error-view.php"; ?>
     </div>
 </body>
 </html>
