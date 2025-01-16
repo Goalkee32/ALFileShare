@@ -3,7 +3,7 @@
 $_GET["class"] = "FileController";
 $_GET["method"] = "loadFileList";
 
-require dirname(__DIR__) . "../controller/router-controller.php";
+require dirname(__DIR__) . "/controller/router-controller.php";
 
 $fileController = new FileController();
 $subDir = isset($_GET["dir"]) ? $_GET["dir"] : "";
