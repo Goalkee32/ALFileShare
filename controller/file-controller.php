@@ -19,8 +19,9 @@ class FileController {
     // Viktiga variabler
     public function settings() {
         $this->userId = $_SESSION["user_id"];
-        $this->uploadDir = "/home/r1nz3n/ALFileShareStorage/" . $this->userId;
+        $this->uploadDir = "/home/ryzen/Code/ALFileShareStorage/" . $this->userId;
         // DEBUG: "C:\\Users\\victo\\OneDrive\\Pictures\\alfileshare" . DIRECTORY_SEPARATOR . $this->userId;
+        // DEBUG: "/home/ryzen/Code/ALFileShareStorage/" . $this->userId;
         // PRODUCTION: "/home/r1nz3n/ALFileShareStorage/" . $this->userId;
     }
     public function getUploadDir() {
