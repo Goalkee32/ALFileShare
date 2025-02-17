@@ -22,11 +22,7 @@ require dirname(__DIR__) . "/controller/router-controller.php";
     <nav class="w3-bar w3-black">
         <a class="w3-button w3-bar-item" href="../include/logout.php">Logga ut</a>
         <a class="w3-button w3-bar-item" href="../public/file-loading.php">Ladda upp</a>
-
-
-
-
-
+        
         <?php
         // Ange sökvägen där mapparna finns
         $dir = '../media';
@@ -49,20 +45,33 @@ require dirname(__DIR__) . "/controller/router-controller.php";
             $selectedFolder = $dir . '/' . $_GET['folder'];
 
             if (is_dir($selectedFolder)) {
-                echo '<h3>Bilder i mappen: ' . htmlspecialchars($_GET['folder']) . '</h3>';
+                echo '<h3>Filer i mappen: ' . htmlspecialchars($_GET['folder']) . '</h3>';
+                
+                $files = glob($selectedFolder . '/*.{jpg,jpeg,png,gif,mp4,mp3}', GLOB_BRACE);
 
-                $images = glob($selectedFolder . '/*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-
-                if ($images) {
+                if ($files) {
                     echo '<div class="w3-row-padding">';
-                    foreach ($images as $image) {
+                    foreach ($files as $file) {
+                        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
                         echo '<div class="w3-col s4">';
-                        echo '<img src="' . $image . '" alt="' . basename($image) . '" style="width:100%" class="w3-hover-opacity">';
+                        
+                        if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                            echo '<img src="' . $file . '" alt="' . basename($file) . '" style="width:100%" class="w3-hover-opacity">';
+                        } elseif ($fileExtension === 'mp4') {
+                            echo '<video controls style="width:100%">
+                                    <source src="' . $file . '" type="video/mp4">
+                                  </video>';
+                        } elseif ($fileExtension === 'mp3') {
+                            echo '<audio controls style="width:100%">
+                                    <source src="' . $file . '" type="audio/mpeg">
+                                  </audio>';
+                        }
+                        
                         echo '</div>';
                     }
                     echo '</div>';
                 } else {
-                    echo '<p>Inga bilder hittades i denna mapp.</p>';
+                    echo '<p>Inga filer hittades i denna mapp.</p>';
                 }
             } else {
                 echo '<p>Mappen kunde inte hittas.</p>';
